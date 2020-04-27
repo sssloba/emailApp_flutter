@@ -1,6 +1,9 @@
 import 'dart:convert';
 
+import 'package:emailApp_flutter/composeButton.dart';
 import 'package:emailApp_flutter/message.dart';
+import 'package:emailApp_flutter/messageCompose.dart';
+import 'package:emailApp_flutter/messageDetail.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
@@ -29,7 +32,6 @@ class _MessageListState extends State<MessageList> {
   void initState() {
     //loadMessageList();
     super.initState();
-    
     messages = Message.browse();
   }
 
@@ -41,7 +43,6 @@ class _MessageListState extends State<MessageList> {
         actions: <Widget> [
           IconButton(icon: Icon(Icons.refresh), onPressed: () {
             var _messages = Message.browse();
-
             setState(() {
               messages = _messages;
             });
@@ -77,12 +78,18 @@ class _MessageListState extends State<MessageList> {
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                     ),
+                    onTap: () {
+                      Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) =>
+                       MessageDetail(message.subject, message.body)
+                      ));
+                    }
                   );
                 },
               );
+              default: return Center(child: CircularProgressIndicator());
           }
         },
-      )
+      ),
       // isLoading 
       // ? Center(child: CircularProgressIndicator())
       // : ListView.separated(
@@ -105,6 +112,7 @@ class _MessageListState extends State<MessageList> {
       //       );
       //     },
       //   ),
+     floatingActionButton: ComposeButton(),
     );
   }
 }
