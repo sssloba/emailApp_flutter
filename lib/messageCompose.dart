@@ -27,9 +27,10 @@ class _MessageComposeState extends State<MessageCompose> {
               children: <Widget>[
                 ListTile(
                   title: TextFormField(
+                    //You can use email_validator library for serious email validation instead of this test validator
                     validator: (value) => !value.contains('@')
                         ? "`TO` field must be a valid email"
-                        : null,
+                        : null, 
                     onSaved: (value) => to = value,
                     decoration: InputDecoration(
                         labelText: 'TO',
