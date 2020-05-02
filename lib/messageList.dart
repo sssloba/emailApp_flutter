@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 
 class MessageList extends StatefulWidget {
   final String title;
@@ -52,12 +53,16 @@ class _MessageListState extends State<MessageList> {
       appBar: AppBar(
         title: Text(widget.title),
         actions: <Widget> [
-          IconButton(icon: Icon(Icons.refresh), onPressed: () async {
-            var _messages = await Message.browse();
-            setState(() {
-              messages = _messages;
-            });
-          })
+          IconButton(
+            icon: Icon(Icons.refresh),
+            onPressed: () async {
+              //var _messages = await Message.browse();
+              setState(() {
+                //messages = _messages;
+                future = Message.browse();
+              });
+            },
+          ),
         ]
       ),
       drawer: Drawer(
@@ -142,22 +147,81 @@ class _MessageListState extends State<MessageList> {
                 itemBuilder: (BuildContext context, int index) {
                   Message message = messages[index];
                   //var iconLetters = _iconLetters[index];
-                  return ListTile(
-                    title: Text(message.subject),
-                    isThreeLine: true,
-                    leading: CircleAvatar(
-                      child: Text('SS'), //iconLetters
+                  return Slidable(
+                    actionPane: SlidableDrawerActionPane(),
+                    actionExtentRatio: 0.25,
+                    actions: <Widget>[
+                      IconSlideAction(
+                        caption: 'Archive',
+                        color: Colors.blue,
+                        icon: Icons.archive,
+                        onTap: () => {},
+                      ),
+                      IconSlideAction(
+                        caption: 'Share',
+                        color: Colors.indigo,
+                        icon: Icons.share,
+                        onTap: () => {},
+                      ),
+                    ],
+                    secondaryActions: <Widget>[
+                      IconSlideAction(
+                        caption: 'More',
+                        color: Colors.black45,
+                        icon: Icons.more_horiz,
+                        onTap: () => {},
+                      ),
+                      IconSlideAction(
+                        caption: 'Delete',
+                        color: Colors.red,
+                        icon: Icons.delete,
+                        onTap: () {
+                          setState(() {
+                            messages.removeAt(index);
+                          });
+                        },
+                      ),
+                    ],
+                    // onDismissed: (direction) {
+                    //   setState(() {
+                    //     messages.removeAt(index);
+                    //   });
+                    //   print(direction);
+                    // },
+                    // background: Container(
+                    //   color: Colors.red[300],
+                    //   alignment: Alignment.centerRight,
+                    //   padding: EdgeInsets.all(16.0),
+                    //   child: Column(
+                    //     mainAxisAlignment: MainAxisAlignment.center,
+                    //     children: <Widget>[
+                    //       Icon(
+                    //         FontAwesomeIcons.trash,
+                    //         color: Colors.white,
+                    //       ),
+                    //       Padding(padding: EdgeInsets.all(4.0),),
+                    //       Text("Delete", style: TextStyle(color: Colors.white),),
+                    //     ],
+                    //   ),
+                    // ),
+                    child: ListTile(
+                      title: Text(message.subject),
+                      isThreeLine: true,
+                      leading: CircleAvatar(
+                        child: Text('SS'), //iconLetters
+                      ),
+                      subtitle: Text(
+                        message.body,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      onTap: () {
+                        Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) =>
+                         MessageDetail(message.subject, message.body)
+                        ));
+                      }
                     ),
-                    subtitle: Text(
-                      message.body,
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    onTap: () {
-                      Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) =>
-                       MessageDetail(message.subject, message.body)
-                      ));
-                    }
+                    key: ObjectKey(message),
                   );
                 },
               );
