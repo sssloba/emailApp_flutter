@@ -12,8 +12,9 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 
 class MessageList extends StatefulWidget {
   final String title;
+  final String status;
 
-  const MessageList({Key key, this.title}) : super(key: key);
+  const MessageList({Key key, this.title, this.status = 'important'}) : super(key: key);
 
   @override
   _MessageListState createState() => _MessageListState();
@@ -43,93 +44,13 @@ class _MessageListState extends State<MessageList> {
   }
 
   void fetch() async {
-    future = Message.browse();
+    future = Message.browse(status: widget.status);
     messages = await future;
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-        actions: <Widget> [
-          IconButton(
-            icon: Icon(Icons.refresh),
-            onPressed: () async {
-              //var _messages = await Message.browse();
-              setState(() {
-                //messages = _messages;
-                future = Message.browse();
-              });
-            },
-          ),
-        ]
-      ),
-      drawer: Drawer(
-        child: Column(
-          children: <Widget>[
-            UserAccountsDrawerHeader(
-              accountEmail: Text("myemail@email.com"),
-              accountName: Text("sssloba"),
-              currentAccountPicture: CircleAvatar(
-                backgroundImage: NetworkImage(
-                  "https://avatars3.githubusercontent.com/u/50879837?s=460&u=5c4070300809d0500080c1b490404401f034616c&v=4"
-                ),
-              ),
-              otherAccountsPictures: <Widget>[
-                GestureDetector(
-                  onTap: () {
-                    showDialog(
-                      context :context,
-                      builder: (context) {
-                        return AlertDialog(title: Text("Adding new account..."),);
-                      }
-                    );
-                  },
-                  child: CircleAvatar(
-                    child: Icon(Icons.add),
-                  ),
-                ),
-              ],
-            ),
-            ListTile(
-              leading: Icon(FontAwesomeIcons.inbox),
-              title: Text("Inbox"),
-              trailing: Chip(
-                label: Text("12",
-                  style: TextStyle(fontWeight: FontWeight.bold)),
-                backgroundColor: Colors.blue[100],
-              ),),
-            ListTile(
-              leading: Icon(FontAwesomeIcons.edit),
-              title: Text("Draft"),
-              trailing: Chip(
-                label: Text("09",
-                  style: TextStyle(fontWeight: FontWeight.bold)),
-                backgroundColor: Colors.blue[100],
-              ),),
-            ListTile(
-              leading: Icon(FontAwesomeIcons.archive),
-              title: Text("Archive"),),
-            ListTile(
-              leading: Icon(FontAwesomeIcons.paperPlane),
-              title: Text("Sent"),),
-            ListTile(
-              leading: Icon(FontAwesomeIcons.trash),
-              title: Text("Trash"),),
-            Divider(),
-            Expanded(
-              child: Align(
-                alignment: FractionalOffset.bottomCenter,
-                child: ListTile(
-              leading: Icon(FontAwesomeIcons.cog),
-              title: Text("Settings"),),
-              ),
-            )
-          ],
-        )
-      ),
-      body: FutureBuilder(
+    return FutureBuilder(
         future: future,
         builder: (BuildContext context, AsyncSnapshot snapshot) {
           switch (snapshot.connectionState) {
@@ -228,7 +149,7 @@ class _MessageListState extends State<MessageList> {
               default: return Center(child: CircularProgressIndicator());
           }
         },
-      ),
+      
       // isLoading 
       // ? Center(child: CircularProgressIndicator())
       // : ListView.separated(
@@ -251,7 +172,7 @@ class _MessageListState extends State<MessageList> {
       //       );
       //     },
       //   ),
-     floatingActionButton: ComposeButton(messages),
+     //floatingActionButton: ComposeButton(messages),
     );
   }
 }
