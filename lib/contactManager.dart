@@ -1,21 +1,34 @@
 import 'dart:async';
 
-List<String> CONTACTS = ["User 1", "User 2", "User 3", "User 4"];
+import 'package:emailApp_flutter/model/contact.dart';
+import 'package:emailApp_flutter/service/contactService.dart';
+
+//List<String> CONTACTS = ["User 1", "User 2", "User 3", "User 4"];
 
 class ContactManager {
 
-  Stream<List<String>> get contactListNow async* {
-    for (var i = 0; i < CONTACTS.length; i++) {
-      await Future.delayed(Duration(seconds: 2));
-      yield CONTACTS.sublist(0, i + 1);
-    }
-  }
+  // Stream<List<String>> get contactListNow async* {
+  //   for (var i = 0; i < CONTACTS.length; i++) {
+  //     await Future.delayed(Duration(seconds: 2));
+  //     yield CONTACTS.sublist(0, i + 1);
+  //   }
+  // }
 
-  final StreamController<int> _contactCounter = StreamController<int>();
-  Stream<int> get contactCounter => _contactCounter.stream;
+  // final StreamController<int> _contactCounter = StreamController<int>();
+  // Stream<int> get contactCounter => _contactCounter.stream;
+
+  // ContactManager() {
+  //   contactListNow.listen((list) => _contactCounter.add(list.length));
+  // }
+
+  final StreamController<int> _contactCount = StreamController<int>();
+  Stream<int> get contactCount => _contactCount.stream;
+  
+  Stream<List<Contact>> get contactListView async* {
+    yield await ContactService.browse();
+  }
 
   ContactManager() {
-    contactListNow.listen((list) => _contactCounter.add(list.length));
+    contactListView.listen((list) => _contactCount.add(list.length));
   }
-
 }

@@ -1,5 +1,6 @@
 import 'package:emailApp_flutter/appDrawer.dart';
 import 'package:emailApp_flutter/contactManager.dart';
+import 'package:emailApp_flutter/model/contact.dart';
 import 'package:flutter/material.dart';
 
 class ContactsScreen extends StatelessWidget {
@@ -14,7 +15,7 @@ class ContactsScreen extends StatelessWidget {
           actions: <Widget>[
             Chip(
               label: StreamBuilder<int>(
-                stream: manager.contactCounter,
+                stream: manager.contactCount,
                 builder: (context, snapshot) {
                   return Text((snapshot.data ?? 0).toString(),
                     style: TextStyle(
@@ -30,19 +31,30 @@ class ContactsScreen extends StatelessWidget {
           ],
         ),
         drawer: AppDrawer(),
-        body: StreamBuilder<List<String>>(
-          stream: manager.contactListNow,
-          builder: (context, snapshot) {
-            List<String> contacts = snapshot.data;
-            return ListView.separated(
-              itemCount: contacts.length,
-              itemBuilder: (BuildContext context, int index) {
-                return ListTile(
-                  title: Text(contacts[index]),
+        body: StreamBuilder<List<Contact>>(
+          stream: manager.contactListView,
+          builder: (BuildContext context, AsyncSnapshot<List<Contact>> snapshot) {
+            switch (snapshot.connectionState) {
+              case ConnectionState.none:
+              case ConnectionState.waiting:
+              case ConnectionState.active:
+                return Center(child: CircularProgressIndicator());
+              case ConnectionState.done:
+                List<Contact> contacts = snapshot.data;
+                return ListView.separated(
+                  itemCount: contacts?.length ?? 0,
+                  itemBuilder: (BuildContext context, int index) {
+                    Contact _contact = contacts[index];
+                    return ListTile(
+                      leading: CircleAvatar(),
+                      title: Text(_contact.name),
+                      subtitle: Text(_contact.email),
+                    );
+                  },  
+                  separatorBuilder: (context, index) => Divider(),       
                 );
-              },  
-              separatorBuilder: (context, index) => Divider(),       
-            );
+              default: return Center(child: CircularProgressIndicator());
+            }
           }
         ),
       ), length: 2,
