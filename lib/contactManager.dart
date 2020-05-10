@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:emailApp_flutter/model/contact.dart';
 import 'package:emailApp_flutter/service/contactService.dart';
+import 'package:rxdart/rxdart.dart';
 
 //List<String> CONTACTS = ["User 1", "User 2", "User 3", "User 4"];
 
@@ -21,7 +22,8 @@ class ContactManager {
   //   contactListNow.listen((list) => _contactCounter.add(list.length));
   // }
 
-  final StreamController<int> _contactCount = StreamController<int>();
+  //final StreamController<int> _contactCount = StreamController<int>();
+  final BehaviorSubject<int> _contactCount = BehaviorSubject<int>();
   Stream<int> get contactCount => _contactCount.stream;
   
   // Stream<List<Contact>> get contactListView async* {

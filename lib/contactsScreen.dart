@@ -1,39 +1,44 @@
 import 'package:emailApp_flutter/appDrawer.dart';
+import 'package:emailApp_flutter/contactCounter.dart';
 import 'package:emailApp_flutter/contactListBuilder.dart';
 import 'package:emailApp_flutter/contactManager.dart';
-import 'package:emailApp_flutter/contactSearchDelegate.dart';
+import 'package:emailApp_flutter/contactSearch.dart';
 import 'package:emailApp_flutter/model/contact.dart';
+import 'package:emailApp_flutter/provider.dart';
 import 'package:flutter/material.dart';
 
 class ContactsScreen extends StatelessWidget {
-  final ContactManager manager = ContactManager();
+  //final ContactManager manager = ContactManager();
 
   @override
   Widget build(BuildContext context) {
+    //ContactManager manager = Provider.of(context);
+
     return DefaultTabController(
       child: Scaffold(
         appBar: AppBar(
           title: Text("Contacts"),
           actions: <Widget>[
-            StreamBuilder<int>(
-              stream: manager.contactCount,
-              builder: (context, snapshot) {
-                return Chip(
-                  label: Text((snapshot.data ?? 0).toString(),
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold
-                    ),
-                  ),
-                  backgroundColor: Colors.red,
-                );
-              }
-            ),
+            ContactCounter(),
+            // StreamBuilder<int>(
+            //   stream: manager.contactCount,
+            //   builder: (context, snapshot) {
+            //     return Chip(
+            //       label: Text((snapshot.data ?? 0).toString(),
+            //         style: TextStyle(
+            //           color: Colors.white,
+            //           fontWeight: FontWeight.bold
+            //         ),
+            //       ),
+            //       backgroundColor: Colors.red,
+            //     );
+            //   }
+            // ),
             IconButton(
               icon: Icon(Icons.search),
               onPressed: () {
                 showSearch(context: context, 
-                delegate: ContactSearchDelegate(manager: manager));
+                delegate: ContactSearch());
               }
             ),
             Padding(padding: EdgeInsets.only(right: 16.0),)
@@ -41,7 +46,7 @@ class ContactsScreen extends StatelessWidget {
         ),
         drawer: AppDrawer(),
         body: ContactListBuilder(
-          stream: manager.contactListView,
+          //stream: manager.contactListView,
           builder: (context, contacts) {
             return ListView.separated(
               itemCount: contacts?.length ?? 0,
