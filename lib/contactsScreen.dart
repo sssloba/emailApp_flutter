@@ -3,16 +3,14 @@ import 'package:emailApp_flutter/contactCounter.dart';
 import 'package:emailApp_flutter/contactListBuilder.dart';
 import 'package:emailApp_flutter/contactManager.dart';
 import 'package:emailApp_flutter/contactSearch.dart';
-import 'package:emailApp_flutter/model/contact.dart';
 import 'package:emailApp_flutter/provider.dart';
 import 'package:flutter/material.dart';
 
 class ContactsScreen extends StatelessWidget {
-  //final ContactManager manager = ContactManager();
 
   @override
   Widget build(BuildContext context) {
-    //ContactManager manager = Provider.of(context);
+    ContactManager manager = Provider.of(context).fetch(ContactManager);
 
     return DefaultTabController(
       child: Scaffold(
@@ -20,20 +18,6 @@ class ContactsScreen extends StatelessWidget {
           title: Text("Contacts"),
           actions: <Widget>[
             ContactCounter(),
-            // StreamBuilder<int>(
-            //   stream: manager.contactCount,
-            //   builder: (context, snapshot) {
-            //     return Chip(
-            //       label: Text((snapshot.data ?? 0).toString(),
-            //         style: TextStyle(
-            //           color: Colors.white,
-            //           fontWeight: FontWeight.bold
-            //         ),
-            //       ),
-            //       backgroundColor: Colors.red,
-            //     );
-            //   }
-            // ),
             IconButton(
               icon: Icon(Icons.search),
               onPressed: () {
@@ -46,7 +30,7 @@ class ContactsScreen extends StatelessWidget {
         ),
         drawer: AppDrawer(),
         body: ContactListBuilder(
-          //stream: manager.contactListView,
+          stream: manager.contactListView,
           builder: (context, contacts) {
             return ListView.separated(
               itemCount: contacts?.length ?? 0,
@@ -61,33 +45,6 @@ class ContactsScreen extends StatelessWidget {
             );
           }
         ),
-        
-        // StreamBuilder<List<Contact>>(
-        //   stream: manager.contactListView,
-        //   builder: (BuildContext context, AsyncSnapshot<List<Contact>> snapshot) {
-        //     switch (snapshot.connectionState) {
-        //       case ConnectionState.none:
-        //       case ConnectionState.waiting:
-        //       case ConnectionState.active:
-        //         return Center(child: CircularProgressIndicator());
-        //       case ConnectionState.done:
-        //         List<Contact> contacts = snapshot.data;
-        //         return ListView.separated(
-        //           itemCount: contacts?.length ?? 0,
-        //           itemBuilder: (BuildContext context, int index) {
-        //             Contact _contact = contacts[index];
-        //             return ListTile(
-        //               leading: CircleAvatar(),
-        //               title: Text(_contact.name),
-        //               subtitle: Text(_contact.email),
-        //             );
-        //           },  
-        //           separatorBuilder: (context, index) => Divider(),       
-        //         );
-        //       default: return Center(child: CircularProgressIndicator());
-        //     }
-        //   }
-        // ),
       ), length: 2,
     );
   }
