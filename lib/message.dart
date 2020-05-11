@@ -21,7 +21,7 @@ class Message {
 
     http.Response response = await http.get(url);
 
-    await Future.delayed(Duration(seconds: 1));
+    //await Future.delayed(Duration(seconds: 1));
 
     String content = response.body;
     List collection = json.decode(content);

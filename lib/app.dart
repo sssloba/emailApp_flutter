@@ -1,8 +1,6 @@
-import 'package:emailApp_flutter/appDrawer.dart';
-import 'package:emailApp_flutter/calendarScreen.dart';
-import 'package:emailApp_flutter/contactsScreen.dart';
 import 'package:emailApp_flutter/inboxScreen.dart';
-import 'package:emailApp_flutter/messageList.dart';
+import 'package:emailApp_flutter/screen/calendarScreen.dart';
+import 'package:emailApp_flutter/screen/contactsScreen.dart';
 import 'package:flutter/material.dart';
 
 class App extends StatefulWidget {
