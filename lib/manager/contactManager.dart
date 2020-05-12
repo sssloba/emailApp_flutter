@@ -23,8 +23,14 @@ class ContactManager {
   // }
 
   //final StreamController<int> _contactCount = StreamController<int>();
-  final BehaviorSubject<int> _contactCount = BehaviorSubject<int>();
-  Stream<int> get count$ => _contactCount.stream;
+  final PublishSubject<String> _filterSubject = PublishSubject<String>();
+  final BehaviorSubject<int> _countSubject = BehaviorSubject<int>();
+  final PublishSubject<List<Contact>> _collectionSubject = PublishSubject();
+
+  Sink<String> get inFilter => _filterSubject.sink;
+
+  Stream<int> get count$ => _countSubject.stream;
+  Stream<List<Contact>> get browse$ =>_collectionSubject.stream;
   
   // Stream<List<Contact>> get contactListView async* {
   //   yield await ContactService.browse();
@@ -32,16 +38,22 @@ class ContactManager {
   // Stream<List<Contact>> get contactListView =>
   //   Stream.fromFuture(ContactService.browse());
 
-  Stream<List<Contact>> browse$({String filter}) =>
-    Stream.fromFuture(ContactService.browse(filter: filter));
+  // Stream<List<Contact>> browse$({String filter}) =>
+  //   Stream.fromFuture(ContactService.browse(filter: filter));
   
 
   ContactManager() {
+    _filterSubject.stream.listen((filter) async {
+      var contacts = await ContactService.browse(filter: filter);
+
+      _collectionSubject.add(contacts);
+    });
     //contactListView.listen((list) => _contactCount.add(list.length));
-    browse$().listen((list) => _contactCount.add(list.length));
+    _collectionSubject.listen((list) => _countSubject.add(list.length));
   }
 
   void dispose() {
-    _contactCount.close();
+    _countSubject.close();
+    _filterSubject.close();
   }
 }
