@@ -2,6 +2,7 @@ import 'dart:async';
 
 
 import 'package:emailApp_flutter/model/contact.dart';
+import 'package:emailApp_flutter/observer.dart';
 import 'package:flutter/material.dart';
 
 class ContactListBuilder extends StatelessWidget {
@@ -15,34 +16,36 @@ class ContactListBuilder extends StatelessWidget {
   Widget build(BuildContext context) {
      //ContactManager manager = Provider.of<ContactManager>(context);
 
-    return StreamBuilder<List<Contact>>(
+    return Observer<List<Contact>>(  //StreamBuilder<List<Contact>>(
       stream: stream,
-      builder: (BuildContext context, AsyncSnapshot<List<Contact>> snapshot) {
-        switch (snapshot.connectionState) {
-          case ConnectionState.none:
-          case ConnectionState.waiting:
-          case ConnectionState.active:
-            return Center(child: CircularProgressIndicator());
-          case ConnectionState.done:
-            List<Contact> contacts = snapshot.data;
+      onSuccess: (BuildContext context, List<Contact> data) => builder(context, data),
+      onWaiting: (context) => LinearProgressIndicator(),
+      // builder: (BuildContext context, AsyncSnapshot<List<Contact>> snapshot) {
+      //   switch (snapshot.connectionState) {
+      //     case ConnectionState.none:
+      //     case ConnectionState.waiting:
+      //     case ConnectionState.active:
+      //       return Center(child: CircularProgressIndicator());
+      //     case ConnectionState.done:
+      //       List<Contact> contacts = snapshot.data;
 
-            return builder(context, contacts);
+      //       return builder(context, contacts);
 
-            // return ListView.separated(
-            //   itemCount: contacts?.length ?? 0,
-            //   itemBuilder: (BuildContext context, int index) {
-            //     Contact _contact = contacts[index];
-            //     return ListTile(
-            //       leading: CircleAvatar(),
-            //       title: Text(_contact.name),
-            //       subtitle: Text(_contact.email),
-            //     );
-            //   },  
-            //   separatorBuilder: (context, index) => Divider(),       
-            // );
-          default: return Center(child: CircularProgressIndicator());
-        }
-      }
+      //       // return ListView.separated(
+      //       //   itemCount: contacts?.length ?? 0,
+      //       //   itemBuilder: (BuildContext context, int index) {
+      //       //     Contact _contact = contacts[index];
+      //       //     return ListTile(
+      //       //       leading: CircleAvatar(),
+      //       //       title: Text(_contact.name),
+      //       //       subtitle: Text(_contact.email),
+      //       //     );
+      //       //   },  
+      //       //   separatorBuilder: (context, index) => Divider(),       
+      //       // );
+      //     default: return Center(child: CircularProgressIndicator());
+      //  }
+      //}
     );
   }
 }
