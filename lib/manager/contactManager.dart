@@ -7,7 +7,6 @@ import 'package:rxdart/rxdart.dart';
 //List<String> CONTACTS = ["User 1", "User 2", "User 3", "User 4"];
 
 class ContactManager {
-
   // Stream<List<String>> get contactListNow async* {
   //   for (var i = 0; i < CONTACTS.length; i++) {
   //     await Future.delayed(Duration(seconds: 2));
@@ -24,14 +23,15 @@ class ContactManager {
 
   //final StreamController<int> _contactCount = StreamController<int>();
   final PublishSubject<String> _filterSubject = PublishSubject<String>();
-  final BehaviorSubject<int> _countSubject = BehaviorSubject<int>();
+  final PublishSubject<int> _countSubject = PublishSubject<int>();
+  // final BehaviorSubject<int> _countSubject = BehaviorSubject<int>();
   final PublishSubject<List<Contact>> _collectionSubject = PublishSubject();
 
   Sink<String> get inFilter => _filterSubject.sink;
 
   Stream<int> get count$ => _countSubject.stream;
-  Stream<List<Contact>> get browse$ =>_collectionSubject.stream;
-  
+  Stream<List<Contact>> get browse$ => _collectionSubject.stream;
+
   // Stream<List<Contact>> get contactListView async* {
   //   yield await ContactService.browse();
   // }
@@ -40,10 +40,10 @@ class ContactManager {
 
   // Stream<List<Contact>> browse$({String filter}) =>
   //   Stream.fromFuture(ContactService.browse(filter: filter));
-  
 
   ContactManager() {
-    _filterSubject.stream.listen((filter) async {
+    _filterSubject.listen((filter) async {
+      // same as _filterSubject.stream.listen((filter) async {
       var contacts = await ContactService.browse(filter: filter);
 
       _collectionSubject.add(contacts);
