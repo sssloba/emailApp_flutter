@@ -28,10 +28,11 @@ class _MessageComposeState extends State<MessageCompose> {
                 ListTile(
                   title: TextFormField(
                     //You can use email_validator library for serious email validation instead of this test validator
-                    validator: (value) => !value.contains('@')
-                        ? "`TO` field must be a valid email"
-                        : null, 
-                    onSaved: (value) => to = value,
+                    validator: (value) =>
+                        value == null || !(value.contains('@'))
+                            ? "`TO` field must be a valid email"
+                            : null,
+                    onSaved: (value) => to = value!,
                     decoration: InputDecoration(
                         labelText: 'TO',
                         labelStyle: TextStyle(fontWeight: FontWeight.bold)),
@@ -40,15 +41,15 @@ class _MessageComposeState extends State<MessageCompose> {
                 ListTile(
                   title: TextFormField(
                     validator: (value) {
-                      int len = value.length;
+                      int len = value?.length ?? 0;
                       if (len == 0) {
                         return "`SUBJECT` cannot be empty";
-                      } else if (len <4) {
+                      } else if (len < 4) {
                         return "`SUBJECT` must be longer than 4 characters";
                       }
                       return null;
                     },
-                    onSaved: (value) => subject = value,
+                    onSaved: (value) => subject = value ?? "",
                     decoration: InputDecoration(
                         labelText: 'SUBJECT',
                         labelStyle: TextStyle(fontWeight: FontWeight.bold)),
@@ -57,7 +58,7 @@ class _MessageComposeState extends State<MessageCompose> {
                 Divider(),
                 ListTile(
                   title: TextFormField(
-                    onSaved: (value) => body = value,
+                    onSaved: (value) => body = value ?? "",
                     decoration: InputDecoration(
                         labelText: 'BODY',
                         labelStyle: TextStyle(fontWeight: FontWeight.bold)),
@@ -65,11 +66,11 @@ class _MessageComposeState extends State<MessageCompose> {
                   ),
                 ),
                 ListTile(
-                    title: RaisedButton(
+                    title: ElevatedButton(
                         child: Text('SEND'),
                         onPressed: () {
-                          if (this.key.currentState.validate()) {
-                            this.key.currentState.save();
+                          if (this.key.currentState!.validate()) {
+                            this.key.currentState!.save();
 
                             Message message = Message(subject, body);
 

@@ -4,7 +4,7 @@ import 'package:emailApp_flutter/provider.dart';
 import 'package:flutter/material.dart';
 
 class ContactSearch extends SearchDelegate {
-  final ContactManager manager;
+  final ContactManager? manager;
 
   ContactSearch({this.manager});
 
@@ -53,8 +53,8 @@ class ContactSearch extends SearchDelegate {
               title: Text(contacts[index].name),
               subtitle: Text(contacts[index].email),
             );
-          },  
-          separatorBuilder: (context, index) => Divider(),       
+          },
+          separatorBuilder: (context, index) => Divider(),
         );
       },
     );
@@ -64,5 +64,4 @@ class ContactSearch extends SearchDelegate {
   Widget buildSuggestions(BuildContext context) {
     return Container();
   }
-  
 }

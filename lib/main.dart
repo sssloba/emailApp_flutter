@@ -13,9 +13,11 @@ class EmailApp extends StatelessWidget {
       child: MaterialApp(
         title: 'Flutter Demo',
         theme: ThemeData(
-          primarySwatch: Colors.indigo,
-          accentColor: Colors.red,
-        ),
+            primarySwatch: Colors.indigo,
+            colorScheme:
+                ColorScheme.fromSwatch().copyWith(secondary: Colors.red)
+            // accentColor: Colors.red,
+            ),
         home: App(),
         //UglyProvider(child: App()),
       ),

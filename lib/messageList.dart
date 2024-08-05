@@ -7,25 +7,26 @@ import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 
 class MessageList extends StatefulWidget {
-  final String title;
+  final String? title;
   final String status;
 
-  const MessageList({Key key, this.title, this.status = 'important'}) : super(key: key);
+  const MessageList({Key? key, this.title, this.status = 'important'})
+      : super(key: key);
 
   @override
   _MessageListState createState() => _MessageListState();
 }
 
 class _MessageListState extends State<MessageList> {
-  Future<List<Message>> future;
-  List<Message> messages;
+  late Future<List<Message>> future;
+  late List<Message> messages;
 
   //Future<List<Message>> messages;
   //bool isLoading = true;
 
   // Future loadMessageList() async {
   //   List<Message> _messages = await Message.browse();
-    
+
   //   setState(() {
   //     messages = _messages;
   //     //isLoading = false;
@@ -60,45 +61,52 @@ class _MessageListState extends State<MessageList> {
             var messages = snapshot.data;
             return ListView.separated(
               itemCount: messages.length,
-              separatorBuilder:(context, index) => Divider(),
+              separatorBuilder: (context, index) => Divider(),
               itemBuilder: (BuildContext context, int index) {
                 Message message = messages[index];
                 //var iconLetters = _iconLetters[index];
                 return Slidable(
-                  actionPane: SlidableDrawerActionPane(),
-                  actionExtentRatio: 0.25,
-                  actions: <Widget>[
-                    IconSlideAction(
-                      caption: 'Archive',
-                      color: Colors.blue,
-                      icon: Icons.archive,
-                      onTap: () => {},
-                    ),
-                    IconSlideAction(
-                      caption: 'Share',
-                      color: Colors.indigo,
-                      icon: Icons.share,
-                      onTap: () => {},
-                    ),
-                  ],
-                  secondaryActions: <Widget>[
-                    IconSlideAction(
-                      caption: 'More',
-                      color: Colors.black45,
-                      icon: Icons.more_horiz,
-                      onTap: () => {},
-                    ),
-                    IconSlideAction(
-                      caption: 'Delete',
-                      color: Colors.red,
-                      icon: Icons.delete,
-                      onTap: () {
-                        setState(() {
-                          messages.removeAt(index);
-                        });
-                      },
-                    ),
-                  ],
+                  startActionPane: ActionPane(
+                    motion: ScrollMotion(),
+                    extentRatio: 0.25,
+                    children: <Widget>[
+                      SlidableAction(
+                        label: 'Archive',
+                        foregroundColor: Colors.blue,
+                        icon: Icons.archive,
+                        onPressed: null,
+                      ),
+                      SlidableAction(
+                        label: 'Share',
+                        foregroundColor: Colors.indigo,
+                        icon: Icons.share,
+                        onPressed: null,
+                      ),
+                    ],
+                  ),
+
+                  endActionPane: ActionPane(
+                    motion: ScrollMotion(),
+                    children: <Widget>[
+                      SlidableAction(
+                        label: 'More',
+                        foregroundColor: Colors.black45,
+                        icon: Icons.more_horiz,
+                        onPressed: null,
+                      ),
+                      SlidableAction(
+                        label: 'Delete',
+                        foregroundColor: Colors.red,
+                        icon: Icons.delete,
+                        onPressed: (context) {
+                          setState(() {
+                            messages.removeAt(index);
+                          });
+                        },
+                      ),
+                    ],
+                  ),
+
                   // onDismissed: (direction) {
                   //   setState(() {
                   //     messages.removeAt(index);
@@ -122,27 +130,30 @@ class _MessageListState extends State<MessageList> {
                   //   ),
                   // ),
                   child: ListTile(
-                    title: Text(message.subject),
-                    isThreeLine: true,
-                    leading: CircleAvatar(
-                      child: Text('SS'), //iconLetters
-                    ),
-                    subtitle: Text(
-                      message.body,
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    onTap: () {
-                      Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) =>
-                        MessageDetail(message.subject, message.body)
-                      ));
-                    }
-                  ),
+                      title: Text(message.subject),
+                      isThreeLine: true,
+                      leading: CircleAvatar(
+                        child: Text('SS'), //iconLetters
+                      ),
+                      subtitle: Text(
+                        message.body,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (BuildContext context) =>
+                                    MessageDetail(
+                                        message.subject, message.body)));
+                      }),
                   key: ObjectKey(message),
                 );
               },
             );
-            default: return Center(child: CircularProgressIndicator());
+          default:
+            return Center(child: CircularProgressIndicator());
         }
       },
     );

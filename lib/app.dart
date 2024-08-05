@@ -22,15 +22,15 @@ class _AppState extends State<App> {
       bottomNavigationBar: BottomNavigationBar(
         items: <BottomNavigationBarItem>[
           BottomNavigationBarItem(
-            title: Text("Inbox"),
+            label: "Inbox",
             icon: Icon(Icons.mail),
           ),
           BottomNavigationBarItem(
-            title: Text("Contacts"),
+            label: "Contacts",
             icon: Icon(Icons.people),
           ),
           BottomNavigationBarItem(
-            title: Text("Calendar"),
+            label: "Calendar",
             icon: Icon(Icons.calendar_today),
           ),
         ],

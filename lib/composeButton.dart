@@ -19,7 +19,7 @@ class ComposeButton extends StatelessWidget {
 
           if (message != null) {
             messages.add(message);
-            Scaffold.of(context).showSnackBar(
+            ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
                 content: Text("Your message has been sent"),
                 backgroundColor: Colors.green,

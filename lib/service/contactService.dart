@@ -8,7 +8,9 @@ class ContactService {
   static String _url = "https://jsonplaceholder.typicode.com/users";
 
   static Future<List<Contact>> browse({filter}) async {
-    http.Response response = await http.get(_url);
+    final Uri uri = Uri.parse(_url);
+    http.Response response = await http.get(uri);
+    // http.Response response = await http.get(_url);
 
     //await Future.delayed(Duration(seconds: 1));
 
@@ -18,10 +20,10 @@ class ContactService {
     Iterable<Contact> _contacts = collection.map((_) => Contact.fromJson(_));
 
     if (filter != null && filter.isNotEmpty) {
-      _contacts = _contacts.where((contact) => contact.name.toLowerCase().contains(filter));
+      _contacts = _contacts
+          .where((contact) => contact.name.toLowerCase().contains(filter));
     }
 
     return _contacts.toList();
-
   }
 }
