@@ -13,6 +13,7 @@ class EmailApp extends StatelessWidget {
       child: MaterialApp(
         title: 'Flutter Demo',
         theme: ThemeData(
+            useMaterial3: false,
             primarySwatch: Colors.indigo,
             colorScheme:
                 ColorScheme.fromSwatch().copyWith(secondary: Colors.red)

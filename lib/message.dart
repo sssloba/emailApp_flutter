@@ -17,10 +17,10 @@ class Message {
 
   static Future<List<Message>> browse({status = 'important'}) async {
     String url = status == 'important'
-        ? 'http://www.mocky.io/v2/5ead97d12f000058001987f1'
-        : 'http://www.mocky.io/v2/5ea57baf3200007900ac273e';
+        ? 'https://run.mocky.io/v3/10691c20-4bcd-4c14-9590-05df52210417'
+        : 'https://run.mocky.io/v3/fb8973db-4f87-45ed-a5c5-de2759386b94';
 
-    final Uri uri = Uri.http(url);
+    final Uri uri = Uri.parse(url);
     http.Response response = await http.get(uri);
     // http.Response response = await http.get(url);
 
